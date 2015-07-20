@@ -1,17 +1,44 @@
 package com.broft.ja_hw4;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    Button asyncButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final TextView tv = (TextView) findViewById(R.id.textView2);
+        asyncButton = (Button) findViewById(R.id.btn_httpTask);
+        asyncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncExample asyncTask = new AsyncExample();
+                asyncTask.setOnAsycCallback(new AsyncExample.OnAsycCallback() {
+                    @Override
+                    public void OnCompleted(String result) {
+                        Log.i("YJ","Result : " +  result);
+                        switch (result) {
+                            case "Failed":
+                                tv.setText("Failed");
+                                break;
+                            case "Completed":
+                                tv.setText("Completed");
+                                break;
+                        }
+                    }
+                });
+                asyncTask.execute();
+            }
+        });
     }
 
     @Override
